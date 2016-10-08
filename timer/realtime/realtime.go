@@ -21,7 +21,7 @@ func (r *Realtime) RegisterFlagSet() {
 }
 
 func (r *Realtime) GetTicker() (*time.Ticker) {
-  return time.NewTicker(time.Duration(100) * time.Millisecond)
+  return time.NewTicker(time.Duration(interval) * time.Millisecond)
 }
 
 func (r *Realtime) GetName() (string) {
