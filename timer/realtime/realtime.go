@@ -1,7 +1,6 @@
 package realtime
 
 import (
-  "fmt"
   "flag"
   "time"
 
@@ -26,8 +25,4 @@ func (r *Realtime) GetTicker() (*time.Ticker) {
 
 func (r *Realtime) GetName() (string) {
   return "realtime"
-}
-
-func (r *Realtime) PrintInterval() {
-  fmt.Println(interval)
 }

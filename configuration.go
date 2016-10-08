@@ -40,7 +40,7 @@ func setupConfig() {
                  "the name of the timer module")
   moduleFlags.StringVar(&dataGenMod,
                  "data-gen",
-                 "default",
+                 "simple",
                  "the name of the data generator module")
   moduleFlags.Var(&outMod,
            "output",

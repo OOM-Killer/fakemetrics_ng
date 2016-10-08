@@ -8,7 +8,6 @@ import (
 )
 
 type Timer interface {
-  PrintInterval()
   RegisterFlagSet()
   GetTicker() (*time.Ticker)
   GetName() (string)

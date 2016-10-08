@@ -7,6 +7,7 @@ import (
   //"time"
 
   "github.com/OOM-Killer/fakemetrics_ng/timer"
+  "github.com/OOM-Killer/fakemetrics_ng/data_gen"
 )
 
 var (
@@ -18,15 +19,16 @@ var (
 func main() {
   flag.Parse()
   timerFactory := timer.NewFactory()
+  dataGenFactory := data_gen.NewFactory()
 
   setupConfig()
 
   timer := timerFactory.GetTimer(timerMod)
-  timer.PrintInterval()
+  dataGen := dataGenFactory.GetDataGen(dataGenMod)
 
   tick := timer.GetTicker()
   for range tick.C {
-    fmt.Println("tick")
+    fmt.Println(dataGen.GetData)
   }
 
 }
