@@ -4,10 +4,12 @@ import (
   iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
   fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   mp "github.com/OOM-Killer/fakemetrics_ng/out/multiplexer"
+  carbon "github.com/OOM-Killer/fakemetrics_ng/out/carbon"
 )
 
 var (
   modules = []iface.OutIface{
+    &carbon.Carbon{},
   }
 )
 

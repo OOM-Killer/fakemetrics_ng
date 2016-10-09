@@ -1,8 +1,8 @@
 package main
 
 import (
-  "fmt"
   "flag"
+  //"fmt"
 
   "gopkg.in/raintank/schema.v1"
 
@@ -29,7 +29,9 @@ func main() {
   dataGen := dataGenFactory.GetInstance(dataGenMod)
   out := outFactory.GetInstance(outMod)
 
+  out.Start()
   outChan := out.GetChan()
+
   tick := timer.GetTicker()
   for range tick.C {
     go doTick(dataGen, outChan, timer.GetTimestamp())
@@ -37,7 +39,10 @@ func main() {
 }
 
 func doTick(dg data_gen.DataGen, outChan chan *schema.MetricData, ts int64) {
-  metric := dg.GetData(ts)
-  fmt.Println(metric)
-  outChan<-metric
+  metrics := dg.GetData(ts)
+  //fmt.Println("length of received data %d", len(metrics))
+  for _,m := range metrics {
+    //fmt.Println("multiplexer sending")
+    outChan<-m
+  }
 }

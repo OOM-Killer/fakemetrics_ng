@@ -9,4 +9,5 @@ import (
 type OutIface interface {
   fact.Module
   GetChan() (chan *schema.MetricData)
+  Start()
 }

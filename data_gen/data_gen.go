@@ -15,7 +15,7 @@ var (
 
 type DataGen interface {
   fact.Module
-  GetData(int64) (*schema.MetricData)
+  GetData(int64) ([]*schema.MetricData)
 }
 
 type DataGenFactory struct {

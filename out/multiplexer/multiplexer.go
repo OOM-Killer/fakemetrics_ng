@@ -2,6 +2,8 @@ package multiplexer
 
 
 import (
+  //"fmt"
+
   "gopkg.in/raintank/schema.v1"
 
   iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
@@ -10,18 +12,23 @@ import (
 type Multiplexer struct {
   in chan *schema.MetricData
   outs []iface.OutIface
+  outChans []chan *schema.MetricData
 }
 
 func (m *Multiplexer) Start() {
-  var outChans []chan *schema.MetricData
+  m.in = make(chan *schema.MetricData)
   for _,out := range m.outs {
-    outChans = append(outChans, out.GetChan())
+    out.Start()
+    m.outChans = append(m.outChans, out.GetChan())
   }
 
-  m.in = make(chan *schema.MetricData)
+  go m.loop()
+}
+
+func (m *Multiplexer) loop() {
   for {
     metric := <-m.in
-    for _,c := range outChans {
+    for _,c := range m.outChans {
       c<-metric
     }
   }
