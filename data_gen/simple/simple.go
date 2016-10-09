@@ -33,7 +33,7 @@ func (s *Simple) GetData(ts int64) ([]*schema.MetricData) {
   for i := 1; i <= keyCount; i++ {
     metrics[i-1] = &schema.MetricData{
       Name:     fmt.Sprintf(keyPrefix + "%d", i),
-      Metric:   "a.c.a.f",
+      Metric:   fmt.Sprintf(keyPrefix + "%d", i),
       OrgId:    i,
       Value:    0,
       Unit:     "ms",
