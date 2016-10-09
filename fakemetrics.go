@@ -3,8 +3,6 @@ package main
 import (
   "fmt"
   "flag"
-  //"os"
-  //"time"
 
   "github.com/OOM-Killer/fakemetrics_ng/timer"
   "github.com/OOM-Killer/fakemetrics_ng/data_gen"
@@ -28,7 +26,7 @@ func main() {
 
   tick := timer.GetTicker()
   for range tick.C {
-    fmt.Println(dataGen.GetData)
+    fmt.Println(dataGen.GetData())
   }
 
 }
