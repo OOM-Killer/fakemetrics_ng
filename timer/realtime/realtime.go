@@ -14,15 +14,15 @@ var (
 )
 
 func (r *Realtime) RegisterFlagSet() {
-  rtFlags := flag.NewFlagSet(r.GetName(), flag.ExitOnError)
-  rtFlags.IntVar(&interval, "interval", 100, "the metric interval")
-  gc.Register(r.GetName(), rtFlags)
-}
-
-func (r *Realtime) GetTicker() (*time.Ticker) {
-  return time.NewTicker(time.Duration(interval) * time.Millisecond)
+  flags := flag.NewFlagSet(r.GetName(), flag.ExitOnError)
+  flags.IntVar(&interval, "interval", 100, "the metric interval")
+  gc.Register(r.GetName(), flags)
 }
 
 func (r *Realtime) GetName() (string) {
   return "realtime"
+}
+
+func (r *Realtime) GetTicker() (*time.Ticker) {
+  return time.NewTicker(time.Duration(interval) * time.Millisecond)
 }

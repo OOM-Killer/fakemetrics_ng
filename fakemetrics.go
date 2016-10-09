@@ -16,13 +16,14 @@ var (
 
 func main() {
   flag.Parse()
-  timerFactory := timer.NewFactory()
-  dataGenFactory := data_gen.NewFactory()
+  timerFactory := timer.New()
+  dataGenFactory := data_gen.New()
 
   setupConfig()
 
-  timer := timerFactory.GetTimer(timerMod)
-  dataGen := dataGenFactory.GetDataGen(dataGenMod)
+  fmt.Println("getting data generator " + dataGenMod)
+  timer := timerFactory.GetInstance(timerMod)
+  dataGen := dataGenFactory.GetInstance(dataGenMod)
 
   tick := timer.GetTicker()
   for range tick.C {

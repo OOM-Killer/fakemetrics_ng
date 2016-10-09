@@ -1,9 +1,16 @@
 package data_gen
 
 import (
-  "fmt"
-
   "gopkg.in/raintank/schema.v1"
+
+  fact "github.com/OOM-Killer/fakemetrics_ng/factory"
+  simple "github.com/OOM-Killer/fakemetrics_ng/data_gen/simple"
+)
+
+var (
+  modules = []DataGen{
+    &simple.Simple{},
+  }
 )
 
 type DataGen interface {
@@ -13,34 +20,19 @@ type DataGen interface {
 }
 
 type DataGenFactory struct {
-  dataGens []DataGen
+  fact.Factory
 }
 
-func NewFactory() DataGenFactory {
-  inst := DataGenFactory{}
-  inst.initDataGens()
-  inst.registerFlagSets()
-  return inst
-}
-
-func (f *DataGenFactory) initDataGens() {
-  f.dataGens = []DataGen{
-    //&simple.Simple{}
+func New() DataGenFactory {
+  fact := DataGenFactory{}
+  for _,mod := range modules {
+    fact.Factory.RegisterModule(mod)
   }
+
+  fact.Factory.RegisterFlagSets()
+  return fact
 }
 
-func (f *DataGenFactory) registerFlagSets() {
-  for _, dataGen := range f.dataGens {
-    dataGen.RegisterFlagSet()
-  }
-}
-
-func (f *DataGenFactory) GetDataGen(seek string) (DataGen) {
-  f.initDataGens()
-  for _,dataGen := range f.dataGens {
-    if (dataGen.GetName() == seek) {
-      return dataGen
-    }
-  }
-  panic(fmt.Sprintf("could not find data generator %s", seek))
+func (f *DataGenFactory) GetInstance (name string) (DataGen) {
+  return f.Factory.GetInstance(name).(DataGen)
 }

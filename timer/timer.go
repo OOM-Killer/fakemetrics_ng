@@ -2,9 +2,15 @@ package timer
 
 import (
   "time"
-  "fmt"
 
+  fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
+)
+
+var (
+  modules = []Timer{
+    &rt.Realtime{},
+  }
 )
 
 type Timer interface {
@@ -14,34 +20,19 @@ type Timer interface {
 }
 
 type TimerFactory struct {
-  timers []Timer
+  fact.Factory
 }
 
-func NewFactory() TimerFactory {
-  inst := TimerFactory{}
-  inst.initTimers()
-  inst.registerFlagSets()
-  return inst
-}
-
-func (f *TimerFactory) initTimers() {
-  f.timers = []Timer{
-    &rt.Realtime{},
+func New() TimerFactory {
+  fact := TimerFactory{}
+  for _,mod := range modules {
+    fact.Factory.RegisterModule(mod)
   }
+
+  fact.Factory.RegisterFlagSets()
+  return fact
 }
 
-func (f *TimerFactory) registerFlagSets() {
-  for _, timer := range f.timers {
-    timer.RegisterFlagSet()
-  }
-}
-
-func (f *TimerFactory) GetTimer(seek string) (Timer) {
-  f.initTimers()
-  for _,timer := range f.timers {
-    if (timer.GetName() == seek) {
-      return timer
-    }
-  }
-  panic(fmt.Sprintf("could not find timer %s", seek))
+func (f *TimerFactory) GetInstance (name string) (Timer) {
+  return f.Factory.GetInstance(name).(Timer)
 }
