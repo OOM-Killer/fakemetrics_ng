@@ -29,5 +29,5 @@ func (f *Factory) GetInstance(seek string)(Module) {
       return inst
     }
   }
-  panic(fmt.Sprintf("could not find data generator %s", seek))
+  panic(fmt.Sprintf("could not find module %s", seek))
 }

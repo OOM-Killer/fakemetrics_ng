@@ -26,3 +26,7 @@ func (r *Realtime) GetName() (string) {
 func (r *Realtime) GetTicker() (*time.Ticker) {
   return time.NewTicker(time.Duration(interval) * time.Millisecond)
 }
+
+func (r *Realtime) GetTimestamp() (int64) {
+  return time.Now().Unix()
+}

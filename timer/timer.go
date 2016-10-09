@@ -14,16 +14,16 @@ var (
 )
 
 type Timer interface {
-  RegisterFlagSet()
+  fact.Module
   GetTicker() (*time.Ticker)
-  GetName() (string)
+  GetTimestamp() (int64)
 }
 
 type TimerFactory struct {
   fact.Factory
 }
 
-func New() TimerFactory {
+func New() (TimerFactory) {
   fact := TimerFactory{}
   for _,mod := range modules {
     fact.Factory.RegisterModule(mod)

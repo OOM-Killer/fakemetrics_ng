@@ -14,16 +14,15 @@ var (
 )
 
 type DataGen interface {
-  RegisterFlagSet()
-  GetData() (*schema.MetricData)
-  GetName() (string)
+  fact.Module
+  GetData(int64) (*schema.MetricData)
 }
 
 type DataGenFactory struct {
   fact.Factory
 }
 
-func New() DataGenFactory {
+func New() (DataGenFactory) {
   fact := DataGenFactory{}
   for _,mod := range modules {
     fact.Factory.RegisterModule(mod)

@@ -27,7 +27,7 @@ func (s *Simple) GetName() (string) {
   return "simple"
 }
 
-func (s *Simple) GetData() (*schema.MetricData) {
+func (s *Simple) GetData(ts int64) (*schema.MetricData) {
   return &schema.MetricData{
     Name:     fmt.Sprintf(keyPrefix + "%d", 1),
     Metric:   "a.c.a.f",
@@ -36,5 +36,6 @@ func (s *Simple) GetData() (*schema.MetricData) {
     Unit:     "ms",
     Mtype:    "gauge",
     Tags:     []string{"some_tag", "ok", "k:2"},
+    Time:     ts,
   }
 }
