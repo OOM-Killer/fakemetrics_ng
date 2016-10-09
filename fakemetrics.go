@@ -32,12 +32,12 @@ func main() {
   outChan := out.GetChan()
   tick := timer.GetTicker()
   for range tick.C {
-    go doTick(&dataGen, outChan, timer.GetTimestamp())
+    go doTick(dataGen, outChan, timer.GetTimestamp())
   }
 }
 
-func doTick(dg *data_gen.DataGen, outChan chan *schema.MetricData, ts int64) {
-  metric := (*dg).GetData(ts)
+func doTick(dg data_gen.DataGen, outChan chan *schema.MetricData, ts int64) {
+  metric := dg.GetData(ts)
   fmt.Println(metric)
   outChan<-metric
 }

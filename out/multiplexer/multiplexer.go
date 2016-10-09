@@ -4,7 +4,7 @@ package multiplexer
 import (
   "gopkg.in/raintank/schema.v1"
 
-  iface "github.com/OOM-Killer/fakemetrics_ng/out/interface"
+  iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
 )
 
 type Multiplexer struct {

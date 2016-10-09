@@ -1,7 +1,7 @@
 package out
 
 import (
-  iface "github.com/OOM-Killer/fakemetrics_ng/out/interface"
+  iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
   fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   mp "github.com/OOM-Killer/fakemetrics_ng/out/multiplexer"
 )

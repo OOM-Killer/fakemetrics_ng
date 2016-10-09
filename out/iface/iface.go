@@ -1,4 +1,4 @@
-package OutIface
+package iface
 
 import (
   fact "github.com/OOM-Killer/fakemetrics_ng/factory"
