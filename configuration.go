@@ -34,17 +34,20 @@ func setupConfig() {
   }
 
   moduleFlags := flag.NewFlagSet("modules", flag.ExitOnError)
-  moduleFlags.StringVar(&timerMod,
-                 "timer",
-                 "realtime",
-                 "the name of the timer module")
-  moduleFlags.StringVar(&dataGenMod,
-                 "data-gen",
-                 "simple",
-                 "the name of the data generator module")
-  moduleFlags.Var(&outMod,
-           "output",
-           "name of the output module, can be specified multiple times")
+  moduleFlags.StringVar(
+    &timerMod,
+    "timer",
+    "realtime",
+    "the name of the timer module")
+  moduleFlags.StringVar(
+    &dataGenMod,
+    "data-gen",
+    "simple",
+    "the name of the data generator module")
+  moduleFlags.Var(
+    &outMod,
+    "output",
+    "name of the output module, can be specified multiple times")
   gc.Register("modules", moduleFlags)
   conf.ParseAll()
 }
