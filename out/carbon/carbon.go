@@ -4,6 +4,8 @@ import (
   "fmt"
   "flag"
   "time"
+  "net"
+  "bytes"
 
   "gopkg.in/raintank/schema.v1"
 
@@ -14,17 +16,22 @@ type Carbon struct {
   in chan *schema.MetricData
   buffer []*schema.MetricData
   bufferPos int
+  conn net.Conn
 }
 
 var (
   flushInterval int
   metricsPerFlush int
+  host string
+  port int
 )
 
 func (c *Carbon) RegisterFlagSet() {
   flags := flag.NewFlagSet(c.GetName(), flag.ExitOnError)
   flags.IntVar(&flushInterval, "flush-interval", 100, "the metric interval")
   flags.IntVar(&metricsPerFlush, "metrics-per-flush", 10, "the metric interval")
+  flags.StringVar(&host, "host", "localhost", "carbon host name")
+  flags.IntVar(&port, "port", 2003, "carbon port")
   gc.Register(c.GetName(), flags)
 }
 
@@ -41,7 +48,21 @@ func (c *Carbon) GetChan() (chan *schema.MetricData) {
 
 func (c *Carbon) Start() {
   c.in = make(chan *schema.MetricData, metricsPerFlush)
+  c.connect()
   go c.loop()
+}
+
+func (c *Carbon) connect() {
+  for {
+    conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
+    if err == nil {
+      c.conn = conn
+      break
+    } else {
+      fmt.Println("failed to connect to carbon, retrying")
+      time.Sleep(100 * time.Millisecond)
+    }
+  }
 }
 
 func (c *Carbon) loop() {
@@ -65,7 +86,20 @@ func (c *Carbon) loop() {
 }
 
 func (c *Carbon) flush() {
-  fmt.Println(fmt.Sprintf("buffer length %d", c.bufferPos))
-  // do some flushing
+  var m *schema.MetricData
+  fmt.Println(fmt.Sprintf("flushing buffer of length %d", c.bufferPos))
+  buf := bytes.NewBufferString("")
+
+  for i := 0; i < c.bufferPos; i++ {
+    m = c.buffer[i]
+    buf.WriteString(fmt.Sprintf("%s %f %d\n", m.Name, m.Value, m.Time))
+  }
   c.bufferPos = 0
+
+  _, err := c.conn.Write(buf.Bytes())
+  if err != nil {
+    // desperate attempt to prevent losing the data in the buffer
+    c.connect()
+    c.conn.Write(buf.Bytes())
+  }
 }
