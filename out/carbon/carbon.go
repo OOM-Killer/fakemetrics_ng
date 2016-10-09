@@ -5,17 +5,16 @@ import (
   "flag"
   "time"
   "net"
-  "bytes"
 
   "gopkg.in/raintank/schema.v1"
 
+  bw "github.com/OOM-Killer/fakemetrics_ng/out/buffered_writer"
   gc "github.com/rakyll/globalconf"
 )
 
 type Carbon struct {
   in chan *schema.MetricData
-  buffer []*schema.MetricData
-  bufferPos int
+  bw *bw.BufferedWriter
   conn net.Conn
 }
 
@@ -47,9 +46,13 @@ func (c *Carbon) GetChan() (chan *schema.MetricData) {
 }
 
 func (c *Carbon) Start() {
-  c.in = make(chan *schema.MetricData, metricsPerFlush)
+  c.bw = &bw.BufferedWriter{}
+  c.bw.FlushInterval = flushInterval
+  c.bw.MetricsPerFlush = metricsPerFlush
+  c.bw.FlushCB = c.flush
+  c.in = c.bw.GetChan()
   c.connect()
-  go c.loop()
+  go c.bw.Loop()
 }
 
 func (c *Carbon) connect() {
@@ -65,41 +68,11 @@ func (c *Carbon) connect() {
   }
 }
 
-func (c *Carbon) loop() {
-  var t = time.NewTicker(time.Duration(flushInterval) * time.Millisecond)
-  c.bufferPos = 0
-  c.buffer = make([]*schema.MetricData, metricsPerFlush)
-
-  for {
-    select {
-    case <-t.C:
-      c.flush()
-    case metric := <-c.in:
-      if (c.bufferPos >= metricsPerFlush) {
-        <-t.C
-        c.flush()
-      }
-      c.buffer[c.bufferPos] = metric
-      c.bufferPos++
-    }
-  }
-}
-
-func (c *Carbon) flush() {
-  var m *schema.MetricData
-  fmt.Println(fmt.Sprintf("flushing buffer of length %d", c.bufferPos))
-  buf := bytes.NewBufferString("")
-
-  for i := 0; i < c.bufferPos; i++ {
-    m = c.buffer[i]
-    buf.WriteString(fmt.Sprintf("%s %f %d\n", m.Name, m.Value, m.Time))
-  }
-  c.bufferPos = 0
-
-  _, err := c.conn.Write(buf.Bytes())
+func (c *Carbon) flush(buf *[]byte) {
+  _, err := c.conn.Write(*buf)
   if err != nil {
     // desperate attempt to prevent losing the data in the buffer
     c.connect()
-    c.conn.Write(buf.Bytes())
+    c.conn.Write(*buf)
   }
 }
