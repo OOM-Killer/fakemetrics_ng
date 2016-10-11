@@ -30,3 +30,7 @@ func (r *Realtime) GetTicker() (*time.Ticker) {
 func (r *Realtime) GetTimestamp() (int64) {
   return time.Now().Unix()
 }
+
+func (r *Realtime) GetInterval() (int) {
+  return interval
+}

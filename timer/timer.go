@@ -16,6 +16,7 @@ var (
 type Timer interface {
   RegisterFlagSet()
   GetName() (string)
+  GetInterval() (int)
   GetTicker() (*time.Ticker)
   GetTimestamp() (int64)
 }

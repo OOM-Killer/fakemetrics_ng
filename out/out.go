@@ -3,7 +3,7 @@ package out
 import (
   "fmt"
 
-  iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
+  "github.com/OOM-Killer/fakemetrics_ng/out/iface"
   mp "github.com/OOM-Killer/fakemetrics_ng/out/multiplexer"
   carbon "github.com/OOM-Killer/fakemetrics_ng/out/carbon"
 )

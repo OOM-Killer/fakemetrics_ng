@@ -4,10 +4,10 @@ import (
   "flag"
 
 
+  "github.com/OOM-Killer/fakemetrics_ng/agents"
   "github.com/OOM-Killer/fakemetrics_ng/timer"
   "github.com/OOM-Killer/fakemetrics_ng/data_gen"
   "github.com/OOM-Killer/fakemetrics_ng/out"
-  "github.com/OOM-Killer/fakemetrics_ng/out/iface"
 )
 
 var (
@@ -21,10 +21,13 @@ func main() {
   timer.RegisterFlagSets()
   data_gen.RegisterFlagSets()
   out.RegisterFlagSets()
+  agents.RegisterFlagSets()
 
   setupConfig()
 
-  timer := timer.GetInstance(timerMod)
+  a := agents.New(timerMod, dataGenMod, outMod)
+  a.Run()
+  /*timer := timer.GetInstance(timerMod)
   dataGen := data_gen.GetInstance(dataGenMod)
   out := out.GetMultiInstance(outMod)
 
@@ -33,12 +36,12 @@ func main() {
   tick := timer.GetTicker()
   for range tick.C {
     go doTick(dataGen, out, timer.GetTimestamp())
-  }
+  }*/
 }
 
-func doTick(dg data_gen.DataGen, out iface.OutIface, ts int64) {
+/*func doTick(dg data_gen.DataGen, out iface.OutIface, ts int64) {
   metrics := dg.GetData(ts)
   for _,m := range metrics {
     out.Put(m)
   }
-}
+}*/
