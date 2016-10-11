@@ -14,6 +14,7 @@ type BufferedWriter struct {
   FlushInterval int
   MetricsPerFlush int
   FlushCB funFlush
+  WriteBufferSize int
   in chan *schema.MetricData
   buffer []*schema.MetricData
   bufferPos int
@@ -21,7 +22,7 @@ type BufferedWriter struct {
 
 func (b *BufferedWriter) GetChan() (chan *schema.MetricData) {
   if b.in == nil {
-    b.in = make(chan *schema.MetricData, b.MetricsPerFlush)
+    b.in = make(chan *schema.MetricData, b.WriteBufferSize)
   }
   return b.in
 }
@@ -48,7 +49,6 @@ func (b *BufferedWriter) Loop() {
 
 func (b *BufferedWriter) flush() {
   var m *schema.MetricData
-  fmt.Println(fmt.Sprintf("flushing buffer of length %d", b.bufferPos))
   buf := bytes.NewBufferString("")
 
   for i := 0; i < b.bufferPos; i++ {

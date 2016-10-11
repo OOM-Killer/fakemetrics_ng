@@ -3,6 +3,7 @@ package carbon
 import (
   "fmt"
   "flag"
+  "log"
   "time"
   "net"
 
@@ -21,6 +22,7 @@ type Carbon struct {
 var (
   flushInterval int
   metricsPerFlush int
+  writeBufferSize int
   host string
   port int
 )
@@ -29,6 +31,7 @@ func (c *Carbon) RegisterFlagSet() {
   flags := flag.NewFlagSet(c.GetName(), flag.ExitOnError)
   flags.IntVar(&flushInterval, "flush-interval", 100, "the metric interval")
   flags.IntVar(&metricsPerFlush, "metrics-per-flush", 10, "the metric interval")
+  flags.IntVar(&writeBufferSize, "write-buffer-size", 1000, "write buffer size")
   flags.StringVar(&host, "host", "localhost", "carbon host name")
   flags.IntVar(&port, "port", 2003, "carbon port")
   gc.Register(c.GetName(), flags)
@@ -38,17 +41,23 @@ func (c *Carbon) GetName() (string) {
   return "carbon"
 }
 
-func (c *Carbon) GetChan() (chan *schema.MetricData) {
+func (c *Carbon) Put(metric *schema.MetricData) {
   if (c.in == nil) {
-    panic ("can't provide channel before starting")
+    panic ("can't accept data before starting")
   }
-  return c.in
+
+  select {
+  case c.in <- metric:
+  default:
+    log.Println("write buffer full. output is slow or buffer too small")
+  }
 }
 
 func (c *Carbon) Start() {
   c.bw = &bw.BufferedWriter{}
   c.bw.FlushInterval = flushInterval
   c.bw.MetricsPerFlush = metricsPerFlush
+  c.bw.WriteBufferSize = writeBufferSize
   c.bw.FlushCB = c.flush
   c.in = c.bw.GetChan()
   c.connect()

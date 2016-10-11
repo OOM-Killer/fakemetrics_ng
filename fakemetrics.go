@@ -3,11 +3,11 @@ package main
 import (
   "flag"
 
-  "gopkg.in/raintank/schema.v1"
 
   "github.com/OOM-Killer/fakemetrics_ng/timer"
   "github.com/OOM-Killer/fakemetrics_ng/data_gen"
   "github.com/OOM-Killer/fakemetrics_ng/out"
+  "github.com/OOM-Killer/fakemetrics_ng/out/iface"
 )
 
 var (
@@ -29,17 +29,16 @@ func main() {
   out := outFactory.GetInstance(outMod)
 
   out.Start()
-  outChan := out.GetChan()
 
   tick := timer.GetTicker()
   for range tick.C {
-    go doTick(dataGen, outChan, timer.GetTimestamp())
+    go doTick(dataGen, out, timer.GetTimestamp())
   }
 }
 
-func doTick(dg data_gen.DataGen, outChan chan *schema.MetricData, ts int64) {
+func doTick(dg data_gen.DataGen, out iface.OutIface, ts int64) {
   metrics := dg.GetData(ts)
   for _,m := range metrics {
-    outChan<-m
+    out.Put(m)
   }
 }
