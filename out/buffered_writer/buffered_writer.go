@@ -1,14 +1,12 @@
 package buffered_writer
 
 import (
-  "bytes"
-  "fmt"
   "time"
 
   "gopkg.in/raintank/schema.v1"
 )
 
-type funFlush func(*[]byte)
+type funFlush func([]*schema.MetricData)
 
 type BufferedWriter struct {
   FlushInterval int
@@ -48,15 +46,6 @@ func (b *BufferedWriter) Loop() {
 }
 
 func (b *BufferedWriter) flush() {
-  var m *schema.MetricData
-  buf := bytes.NewBufferString("")
-
-  for i := 0; i < b.bufferPos; i++ {
-    m = b.buffer[i]
-    buf.WriteString(fmt.Sprintf("%s %f %d\n", m.Name, m.Value, m.Time))
-  }
+  b.FlushCB(b.buffer[:b.bufferPos])
   b.bufferPos = 0
-
-  bytes := buf.Bytes()
-  b.FlushCB(&bytes)
 }

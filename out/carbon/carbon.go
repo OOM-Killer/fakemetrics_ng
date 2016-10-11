@@ -2,6 +2,7 @@ package carbon
 
 import (
   "fmt"
+  "bytes"
   "flag"
   "log"
   "time"
@@ -77,11 +78,17 @@ func (c *Carbon) connect() {
   }
 }
 
-func (c *Carbon) flush(buf *[]byte) {
-  _, err := c.conn.Write(*buf)
+func (c *Carbon) flush(metrics []*schema.MetricData) {
+  buf := bytes.NewBufferString("")
+
+  for _,m := range metrics {
+    buf.WriteString(fmt.Sprintf("%s %f %d\n", m.Name, m.Value, m.Time))
+  }
+
+  _, err := c.conn.Write(buf.Bytes())
   if err != nil {
     // desperate attempt to prevent losing the data in the buffer
     c.connect()
-    c.conn.Write(*buf)
+    c.conn.Write(buf.Bytes())
   }
 }
