@@ -5,7 +5,6 @@ import (
 
   "gopkg.in/raintank/schema.v1"
 
-  fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   simple "github.com/OOM-Killer/fakemetrics_ng/data_gen/simple"
 )
 
@@ -16,7 +15,8 @@ var (
 )
 
 type DataGen interface {
-  fact.Module
+  RegisterFlagSet()
+  GetName() (string)
   GetData(int64) ([]*schema.MetricData)
 }
 

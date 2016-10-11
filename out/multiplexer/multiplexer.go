@@ -2,8 +2,6 @@ package multiplexer
 
 
 import (
-  //"fmt"
-
   "gopkg.in/raintank/schema.v1"
 
   iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
