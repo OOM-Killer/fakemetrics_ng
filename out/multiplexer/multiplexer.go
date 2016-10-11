@@ -27,8 +27,8 @@ func (m *Multiplexer) Put(metric *schema.MetricData) {
   }
 }
 
-func (m *Multiplexer) AddOut(out *iface.OutIface) {
-  m.outs = append(m.outs, *out)
+func (m *Multiplexer) AddOut(out iface.OutIface) {
+  m.outs = append(m.outs, out)
 }
 
 func (m *Multiplexer) GetName() (string) {

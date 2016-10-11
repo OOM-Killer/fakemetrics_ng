@@ -1,6 +1,8 @@
 package data_gen
 
 import (
+  "fmt"
+
   "gopkg.in/raintank/schema.v1"
 
   fact "github.com/OOM-Killer/fakemetrics_ng/factory"
@@ -18,20 +20,17 @@ type DataGen interface {
   GetData(int64) ([]*schema.MetricData)
 }
 
-type DataGenFactory struct {
-  fact.Factory
-}
-
-func New() (DataGenFactory) {
-  fact := DataGenFactory{}
-  for _,mod := range modules {
-    fact.Factory.RegisterModule(mod)
+func RegisterFlagSets() {
+  for _,dg := range modules {
+    dg.RegisterFlagSet()
   }
-
-  fact.Factory.RegisterFlagSets()
-  return fact
 }
 
-func (f *DataGenFactory) GetInstance (name string) (DataGen) {
-  return f.Factory.GetInstance(name).(DataGen)
+func GetInstance(name string) (DataGen) {
+  for _,dg := range modules {
+    if dg.GetName() == name {
+      return dg
+    }
+  }
+  panic(fmt.Sprintf("failed to find data_gen %s", name))
 }

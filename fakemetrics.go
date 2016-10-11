@@ -18,15 +18,15 @@ var (
 
 func main() {
   flag.Parse()
-  timerFactory := timer.New()
-  dataGenFactory := data_gen.New()
-  outFactory := out.New()
+  timer.RegisterFlagSets()
+  data_gen.RegisterFlagSets()
+  out.RegisterFlagSets()
 
   setupConfig()
 
-  timer := timerFactory.GetInstance(timerMod)
-  dataGen := dataGenFactory.GetInstance(dataGenMod)
-  out := outFactory.GetInstance(outMod)
+  timer := timer.GetInstance(timerMod)
+  dataGen := data_gen.GetInstance(dataGenMod)
+  out := out.GetMultiInstance(outMod)
 
   out.Start()
 

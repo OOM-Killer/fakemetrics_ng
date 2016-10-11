@@ -1,8 +1,9 @@
 package out
 
 import (
+  "fmt"
+
   iface "github.com/OOM-Killer/fakemetrics_ng/out/iface"
-  fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   mp "github.com/OOM-Killer/fakemetrics_ng/out/multiplexer"
   carbon "github.com/OOM-Killer/fakemetrics_ng/out/carbon"
 )
@@ -13,29 +14,25 @@ var (
   }
 )
 
-type OutFactory struct {
-  fact.Factory
-}
-
-func New() (OutFactory) {
-  fact := OutFactory{}
-  for _,mod := range modules {
-    fact.Factory.RegisterModule(mod)
+func RegisterFlagSets() {
+  for _,o := range modules {
+    o.RegisterFlagSet()
   }
-
-  fact.Factory.RegisterFlagSets()
-  return fact
 }
 
-func (f *OutFactory) GetSingleInstance (name string) (*iface.OutIface) {
-  inst := f.Factory.GetInstance(name).(iface.OutIface)
-  return &inst
+func GetInstance(name string) (iface.OutIface) {
+  for _,o := range modules {
+    if o.GetName() == name {
+      return o
+    }
+  }
+  panic(fmt.Sprintf("failed to find output %s", name))
 }
 
-func (f *OutFactory) GetInstance(names []string) (iface.OutIface) {
+func GetMultiInstance(names []string) (iface.OutIface) {
   m := mp.Multiplexer{}
   for _,name := range names {
-    m.AddOut(f.GetSingleInstance(name))
+    m.AddOut(GetInstance(name))
   }
   return &m
 }

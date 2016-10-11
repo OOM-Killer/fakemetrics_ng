@@ -2,8 +2,8 @@ package timer
 
 import (
   "time"
+  "fmt"
 
-  fact "github.com/OOM-Killer/fakemetrics_ng/factory"
   rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
 )
 
@@ -14,25 +14,23 @@ var (
 )
 
 type Timer interface {
-  fact.Module
+  RegisterFlagSet()
+  GetName() (string)
   GetTicker() (*time.Ticker)
   GetTimestamp() (int64)
 }
 
-type TimerFactory struct {
-  fact.Factory
-}
-
-func New() (TimerFactory) {
-  fact := TimerFactory{}
-  for _,mod := range modules {
-    fact.Factory.RegisterModule(mod)
+func RegisterFlagSets() {
+  for _,t := range modules {
+    t.RegisterFlagSet()
   }
-
-  fact.Factory.RegisterFlagSets()
-  return fact
 }
 
-func (f *TimerFactory) GetInstance (name string) (Timer) {
-  return f.Factory.GetInstance(name).(Timer)
+func GetInstance(name string) (Timer) {
+  for _,t := range modules {
+    if t.GetName() == name {
+      return t
+    }
+  }
+  panic(fmt.Sprintf("failed to find timer %s", name))
 }
