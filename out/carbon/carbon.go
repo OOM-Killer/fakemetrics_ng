@@ -28,18 +28,14 @@ var (
   port int
 )
 
-func (c *Carbon) RegisterFlagSet() {
-  flags := flag.NewFlagSet(c.GetName(), flag.ExitOnError)
+func RegisterFlagSet() {
+  flags := flag.NewFlagSet("carbon", flag.ExitOnError)
   flags.IntVar(&flushInterval, "flush-interval", 100, "the metric interval")
   flags.IntVar(&metricsPerFlush, "metrics-per-flush", 10, "the metric interval")
   flags.IntVar(&writeBufferSize, "write-buffer-size", 1000, "write buffer size")
   flags.StringVar(&host, "host", "localhost", "carbon host name")
   flags.IntVar(&port, "port", 2003, "carbon port")
-  gc.Register(c.GetName(), flags)
-}
-
-func (c *Carbon) GetName() (string) {
-  return "carbon"
+  gc.Register("carbon", flags)
 }
 
 func (c *Carbon) Put(metric *schema.MetricData) {

@@ -2,7 +2,6 @@ package buffered_writer
 
 import (
   "time"
-
   "gopkg.in/raintank/schema.v1"
 )
 

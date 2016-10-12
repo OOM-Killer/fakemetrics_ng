@@ -16,15 +16,11 @@ var (
   keyPrefix string
 )
 
-func (s *Simple) RegisterFlagSet() {
-  flags := flag.NewFlagSet(s.GetName(), flag.ExitOnError)
+func RegisterFlagSet() {
+  flags := flag.NewFlagSet("simple", flag.ExitOnError)
   flags.IntVar(&keyCount, "key_count", 100, "number of keys to generate")
   flags.StringVar(&keyPrefix, "key_prefix", "some.key.", "prefix for keys")
-  gc.Register(s.GetName(), flags)
-}
-
-func (s *Simple) GetName() (string) {
-  return "simple"
+  gc.Register("simple", flags)
 }
 
 func (s *Simple) GetData(ts int64) ([]*schema.MetricData) {

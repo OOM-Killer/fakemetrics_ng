@@ -5,8 +5,6 @@ import (
 )
 
 type OutIface interface {
-  RegisterFlagSet()
-  GetName() (string)
   Start()
   Put(*schema.MetricData)
 }

@@ -13,14 +13,10 @@ var (
   interval int
 )
 
-func (r *Realtime) RegisterFlagSet() {
-  flags := flag.NewFlagSet(r.GetName(), flag.ExitOnError)
+func RegisterFlagSet() {
+  flags := flag.NewFlagSet("realtime", flag.ExitOnError)
   flags.IntVar(&interval, "interval", 100, "the metric interval")
-  gc.Register(r.GetName(), flags)
-}
-
-func (r *Realtime) GetName() (string) {
-  return "realtime"
+  gc.Register("realtime", flags)
 }
 
 func (r *Realtime) GetTicker() (*time.Ticker) {

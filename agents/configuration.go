@@ -12,7 +12,7 @@ var (
 )
 
 func RegisterFlagSets() {
-  flags := flag.NewFlagSet("agents", flag.ExitOnError)
+  flags := flag.NewFlagSet("multiagent", flag.ExitOnError)
   flags.IntVar(
     &agentCount,
     "agent-count",
@@ -23,5 +23,5 @@ func RegisterFlagSets() {
     "offsets",
     "random",
     "how to distribute the agent offsets")
-  gc.Register("agents", flags)
+  gc.Register("multiagent", flags)
 }

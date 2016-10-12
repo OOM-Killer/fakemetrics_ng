@@ -8,25 +8,35 @@ import (
   carbon "github.com/OOM-Killer/fakemetrics_ng/out/carbon"
 )
 
+type Module struct {
+  Name      string
+  Init      func() (iface.OutIface)
+  RegFlags  func()
+}
+
 var (
-  modules = []iface.OutIface{
-    &carbon.Carbon{},
+  moduleMap []Module = []Module{
+    {
+      "carbon",
+      func() (iface.OutIface) {return &carbon.Carbon{}},
+      carbon.RegisterFlagSet,
+    },
   }
 )
 
 func RegisterFlagSets() {
-  for _,o := range modules {
-    o.RegisterFlagSet()
+  for _,o := range moduleMap {
+    o.RegFlags()
   }
 }
 
-func GetInstance(name string) (iface.OutIface) {
-  for _,o := range modules {
-    if o.GetName() == name {
-      return o
+func GetInstance(seek string) (iface.OutIface) {
+  for _,o := range moduleMap {
+    if o.Name == seek {
+      return o.Init()
     }
   }
-  panic(fmt.Sprintf("failed to find output %s", name))
+  panic(fmt.Sprintf("failed to find output %s", seek))
 }
 
 func GetMultiInstance(names []string) (iface.OutIface) {
