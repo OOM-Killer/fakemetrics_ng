@@ -19,6 +19,7 @@ var (
   flushInterval int
   metricsPerFlush int
   writeBufferSize int
+  blockOnWrite bool
   host string
   port int
 )
@@ -42,6 +43,7 @@ func RegisterFlagSet() {
   flags.IntVar(&writeBufferSize, "write-buffer-size", 1000, "write buffer size")
   flags.StringVar(&host, "host", "localhost", "carbon host name")
   flags.IntVar(&port, "port", 2003, "carbon port")
+  flags.BoolVar(&blockOnWrite, "block-on-write", false, "block on slow write")
   gc.Register("carbon", flags)
 }
 
@@ -50,10 +52,14 @@ func (c *Carbon) Put(metric *schema.MetricData) {
     panic ("can't accept data before starting")
   }
 
-  select {
-  case c.in <- metric:
-  default:
-    log.Println("write buffer full. output is slow or buffer too small")
+  if (blockOnWrite) {
+    c.in <- metric
+  } else {
+    select {
+    case c.in <- metric:
+    default:
+      log.Println("write buffer full. output is slow or buffer too small")
+    }
   }
 }
 
