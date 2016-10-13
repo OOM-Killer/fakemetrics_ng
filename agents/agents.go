@@ -1,6 +1,7 @@
 package agents
 
 import (
+  "time"
   "fmt"
   "math/rand"
 
@@ -45,8 +46,18 @@ func (a *Agents) Run() {
   }
 
   // separate the two loops to not add initialization time to offsets
+  var t *time.Ticker
+
   for i := 0; i < agentCount; i++ {
     go a.agents[i].Run()
+
+    if (slowIncrease) {
+      if (t == nil) {
+        t = time.NewTicker(time.Duration(launchInterval) * time.Millisecond)
+      }
+      fmt.Println(fmt.Sprintf("agent count is %d", i + 1))
+      <-t.C
+    }
   }
 
   <-make(chan bool)

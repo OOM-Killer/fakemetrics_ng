@@ -9,6 +9,8 @@ import (
 var (
   agentCount int
   offsets string
+  slowIncrease bool
+  launchInterval int
 )
 
 func RegisterFlagSets() {
@@ -23,5 +25,15 @@ func RegisterFlagSets() {
     "offsets",
     "random",
     "how to distribute the agent offsets")
+  flags.BoolVar(
+    &slowIncrease,
+    "slow-increase",
+    true,
+    "increase number of agents slowly")
+  flags.IntVar(
+    &launchInterval,
+    "launch-interval",
+    100,
+    "interval between launching agents in ms")
   gc.Register("multiagent", flags)
 }
