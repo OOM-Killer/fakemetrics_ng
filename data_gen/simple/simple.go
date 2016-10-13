@@ -6,15 +6,22 @@ import (
 
   "gopkg.in/raintank/schema.v1"
 
+  mod "github.com/OOM-Killer/fakemetrics_ng/data_gen/module"
   gc "github.com/rakyll/globalconf"
 )
-
-type Simple struct {}
 
 var (
   keyCount int
   keyPrefix string
 )
+
+var Module *mod.ModuleT = &mod.ModuleT{
+  "simple",
+  func() (mod.DataGen) {return &Simple{}},
+  RegisterFlagSet,
+}
+
+type Simple struct {}
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("simple", flag.ExitOnError)

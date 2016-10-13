@@ -10,15 +10,10 @@ import (
 
   "gopkg.in/raintank/schema.v1"
 
+  mod "github.com/OOM-Killer/fakemetrics_ng/out/module"
   bw "github.com/OOM-Killer/fakemetrics_ng/out/buffered_writer"
   gc "github.com/rakyll/globalconf"
 )
-
-type Carbon struct {
-  in chan *schema.MetricData
-  bw *bw.BufferedWriter
-  conn net.Conn
-}
 
 var (
   flushInterval int
@@ -27,6 +22,18 @@ var (
   host string
   port int
 )
+
+var Module *mod.ModuleT = &mod.ModuleT{
+  "carbon",
+  func() (mod.OutIface) {return &Carbon{}},
+  RegisterFlagSet,
+}
+
+type Carbon struct {
+  in chan *schema.MetricData
+  bw *bw.BufferedWriter
+  conn net.Conn
+}
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("carbon", flag.ExitOnError)

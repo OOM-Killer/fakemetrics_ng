@@ -4,14 +4,21 @@ import (
   "flag"
   "time"
 
+  mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
   gc "github.com/rakyll/globalconf"
 )
-
-type Realtime struct {}
 
 var (
   interval int
 )
+
+var Module *mod.ModuleT = &mod.ModuleT{
+  "realtime",
+  func() (mod.Timer) {return &Realtime{}},
+  RegisterFlagSet,
+}
+
+type Realtime struct {}
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("realtime", flag.ExitOnError)

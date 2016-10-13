@@ -3,15 +3,15 @@ package agents
 import (
   "time"
 
-  "github.com/OOM-Killer/fakemetrics_ng/timer"
-  "github.com/OOM-Killer/fakemetrics_ng/data_gen"
-  "github.com/OOM-Killer/fakemetrics_ng/out/iface"
+  timer "github.com/OOM-Killer/fakemetrics_ng/timer/module"
+  data_gen "github.com/OOM-Killer/fakemetrics_ng/data_gen/module"
+  out "github.com/OOM-Killer/fakemetrics_ng/out/module"
 )
 
 type Agent struct {
   timer timer.Timer
   dataGen data_gen.DataGen
-  out iface.OutIface
+  out out.OutIface
   offset int
 }
 
