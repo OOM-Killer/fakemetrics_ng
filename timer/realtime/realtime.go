@@ -28,8 +28,8 @@ func RegisterFlagSet() {
   gc.Register("realtime", flags)
 }
 
-func (r *Realtime) GetTicker() (*time.Ticker) {
-  return time.NewTicker(time.Duration(interval) * time.Millisecond)
+func (r *Realtime) GetTicker() (<-chan time.Time) {
+  return time.NewTicker(time.Duration(interval) * time.Millisecond).C
 }
 
 func (r *Realtime) GetTimestamp() (int64) {

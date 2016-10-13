@@ -5,11 +5,13 @@ import (
 
   mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
   rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
+  bf "github.com/OOM-Killer/fakemetrics_ng/timer/backfill"
 )
 
 var(
   moduleMap []*mod.ModuleT = []*mod.ModuleT{
     rt.Module,
+    bf.Module,
   }
 )
 

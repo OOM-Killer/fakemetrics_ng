@@ -18,9 +18,9 @@ type Agent struct {
 func (a *Agent) Run() {
   time.Sleep(time.Duration(a.offset))
 
-  tick := a.timer.GetTicker()
   a.out.Start()
-  for range tick.C {
+  tick := a.timer.GetTicker()
+  for range tick {
     go a.doTick()
   }
 }

@@ -6,7 +6,7 @@ import (
 
 type Timer interface {
   GetInterval() (int)
-  GetTicker() (*time.Ticker)
+  GetTicker() (<-chan time.Time)
   GetTimestamp() (int64)
 }
 
