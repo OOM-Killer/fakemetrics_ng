@@ -10,6 +10,6 @@ type DataGen interface {
 
 type ModuleT struct {
   Name      string
-  Init      func() (DataGen)
+  Init      func(int) (DataGen)
   RegFlags  func()
 }

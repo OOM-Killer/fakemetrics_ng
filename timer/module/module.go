@@ -12,6 +12,6 @@ type Timer interface {
 
 type ModuleT struct {
   Name      string
-  Init      func() (Timer)
+  Init      func(int) (Timer)
   RegFlags  func()
 }

@@ -14,11 +14,13 @@ var (
 
 var Module *mod.ModuleT = &mod.ModuleT{
   "realtime",
-  func() (mod.Timer) {return &Realtime{}},
+  func(id int) (mod.Timer) {return &Realtime{id}},
   RegisterFlagSet,
 }
 
-type Realtime struct {}
+type Realtime struct {
+  agentId int
+}
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("realtime", flag.ExitOnError)

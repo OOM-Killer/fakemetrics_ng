@@ -25,7 +25,7 @@ func (a *Agents) Run() {
   var os int
 
   for i := 0; i < agentCount; i++ {
-    timer := timer.GetInstance(a.time)
+    timer := timer.GetInstance(a.time, i)
     switch offsets {
     case "none":
       os = 0
@@ -39,7 +39,7 @@ func (a *Agents) Run() {
 
     a.agents[i] = &Agent{
       timer,
-      data_gen.GetInstance(a.dataGen),
+      data_gen.GetInstance(a.dataGen, i),
       out.GetMultiInstance(a.out),
       os,
     }

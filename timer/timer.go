@@ -19,10 +19,10 @@ func RegisterFlagSets() {
   }
 }
 
-func GetInstance(seek string) (mod.Timer) {
+func GetInstance(seek string, agentId int) (mod.Timer) {
   for _,t := range moduleMap {
     if t.Name == seek {
-      return t.Init()
+      return t.Init(agentId)
     }
   }
   panic(fmt.Sprintf("failed to find timer %s", seek))

@@ -19,10 +19,10 @@ func RegisterFlagSets() {
   }
 }
 
-func GetInstance(seek string) (mod.DataGen) {
+func GetInstance(seek string, agentId int) (mod.DataGen) {
   for _,dg := range moduleMap {
     if dg.Name == seek {
-      return dg.Init()
+      return dg.Init(agentId)
     }
   }
   panic(fmt.Sprintf("failed to find data_gen %s", seek))

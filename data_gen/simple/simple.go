@@ -17,11 +17,13 @@ var (
 
 var Module *mod.ModuleT = &mod.ModuleT{
   "simple",
-  func() (mod.DataGen) {return &Simple{}},
+  func(id int) (mod.DataGen) {return &Simple{id}},
   RegisterFlagSet,
 }
 
-type Simple struct {}
+type Simple struct {
+  agentId int
+}
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("simple", flag.ExitOnError)
