@@ -5,11 +5,13 @@ import (
 
   mod "github.com/OOM-Killer/fakemetrics_ng/data_gen/module"
   simple "github.com/OOM-Killer/fakemetrics_ng/data_gen/simple"
+  kc "github.com/OOM-Killer/fakemetrics_ng/data_gen/key_changer"
 )
 
 var(
   moduleMap []*mod.ModuleT = []*mod.ModuleT{
     simple.Module,
+    kc.Module,
   }
 )
 

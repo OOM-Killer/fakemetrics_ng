@@ -27,18 +27,18 @@ type Simple struct {
 
 func RegisterFlagSet() {
   flags := flag.NewFlagSet("simple", flag.ExitOnError)
-  flags.IntVar(&keyCount, "key_count", 100, "number of keys to generate")
-  flags.StringVar(&keyPrefix, "key_prefix", "some.key.", "prefix for keys")
+  flags.IntVar(&keyCount, "key-count", 100, "number of keys to generate")
+  flags.StringVar(&keyPrefix, "key-prefix", "some.key.", "prefix for keys")
   gc.Register("simple", flags)
 }
 
 func (s *Simple) GetData(ts int64) ([]*schema.MetricData) {
   metrics := make([]*schema.MetricData, keyCount)
 
-  for i := 1; i <= keyCount; i++ {
-    metrics[i-1] = &schema.MetricData{
-      Name:     fmt.Sprintf(keyPrefix + "%d", i),
-      Metric:   fmt.Sprintf(keyPrefix + "%d", i),
+  for i := 0; i < keyCount; i++ {
+    metrics[i] = &schema.MetricData{
+      Name:     fmt.Sprintf(keyPrefix + "%d.%d", s.agentId, i),
+      Metric:   fmt.Sprintf(keyPrefix + "%d.%d", s.agentId, i),
       OrgId:    i,
       Value:    0,
       Unit:     "ms",
