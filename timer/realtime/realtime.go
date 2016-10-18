@@ -1,41 +1,41 @@
 package realtime
 
 import (
-  "flag"
-  "time"
+	"flag"
+	"time"
 
-  mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
-  gc "github.com/rakyll/globalconf"
+	mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
+	gc "github.com/rakyll/globalconf"
 )
 
 var (
-  interval int
+	interval int
 )
 
 var Module *mod.ModuleT = &mod.ModuleT{
-  "realtime",
-  func(id int) (mod.Timer) {return &Realtime{id}},
-  RegisterFlagSet,
+	"realtime",
+	func(id int) mod.Timer { return &Realtime{id} },
+	RegisterFlagSet,
 }
 
 type Realtime struct {
-  agentId int
+	agentId int
 }
 
 func RegisterFlagSet() {
-  flags := flag.NewFlagSet("realtime", flag.ExitOnError)
-  flags.IntVar(&interval, "interval", 100, "the metric interval")
-  gc.Register("realtime", flags)
+	flags := flag.NewFlagSet("realtime", flag.ExitOnError)
+	flags.IntVar(&interval, "interval", 100, "the metric interval")
+	gc.Register("realtime", flags)
 }
 
-func (r *Realtime) GetTicker() (<-chan time.Time) {
-  return time.NewTicker(time.Duration(interval) * time.Millisecond).C
+func (r *Realtime) GetTicker() <-chan time.Time {
+	return time.NewTicker(time.Duration(interval) * time.Millisecond).C
 }
 
-func (r *Realtime) GetTimestamp() (int64) {
-  return time.Now().Unix()
+func (r *Realtime) GetTimestamp() int64 {
+	return time.Now().Unix()
 }
 
-func (r *Realtime) GetInterval() (int) {
-  return interval
+func (r *Realtime) GetInterval() int {
+	return interval
 }

@@ -1,31 +1,31 @@
 package timer
 
 import (
-  "fmt"
+	"fmt"
 
-  mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
-  rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
-  bf "github.com/OOM-Killer/fakemetrics_ng/timer/backfill"
+	bf "github.com/OOM-Killer/fakemetrics_ng/timer/backfill"
+	mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
+	rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
 )
 
-var(
-  moduleMap []*mod.ModuleT = []*mod.ModuleT{
-    rt.Module,
-    bf.Module,
-  }
+var (
+	moduleMap []*mod.ModuleT = []*mod.ModuleT{
+		rt.Module,
+		bf.Module,
+	}
 )
 
 func RegisterFlagSets() {
-  for _,t := range moduleMap {
-    t.RegFlags()
-  }
+	for _, t := range moduleMap {
+		t.RegFlags()
+	}
 }
 
-func GetInstance(seek string, agentId int) (mod.Timer) {
-  for _,t := range moduleMap {
-    if t.Name == seek {
-      return t.Init(agentId)
-    }
-  }
-  panic(fmt.Sprintf("failed to find timer %s", seek))
+func GetInstance(seek string, agentId int) mod.Timer {
+	for _, t := range moduleMap {
+		if t.Name == seek {
+			return t.Init(agentId)
+		}
+	}
+	panic(fmt.Sprintf("failed to find timer %s", seek))
 }
