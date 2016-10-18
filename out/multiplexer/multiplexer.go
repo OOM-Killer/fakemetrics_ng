@@ -28,8 +28,4 @@ func (m *Multiplexer) AddOut(out mod.OutIface) {
 	m.outs = append(m.outs, out)
 }
 
-func (m *Multiplexer) GetName() string {
-	return "multiplexer"
-}
-
 func (m *Multiplexer) RegisterFlagSet() {}
