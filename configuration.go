@@ -5,6 +5,11 @@ import (
 	"strings"
 
 	gc "github.com/rakyll/globalconf"
+
+	"github.com/OOM-Killer/fakemetrics_ng/agents"
+	"github.com/OOM-Killer/fakemetrics_ng/data_gen"
+	"github.com/OOM-Killer/fakemetrics_ng/out"
+	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
 
 type stringListFlags []string
@@ -25,6 +30,11 @@ var (
 )
 
 func setupConfig() {
+	timer.RegisterFlagSets()
+	data_gen.RegisterFlagSets()
+	out.RegisterFlagSets()
+	agents.RegisterFlagSets()
+
 	conf, err := gc.NewWithOptions(
 		&gc.Options{
 			Filename: *confFile,

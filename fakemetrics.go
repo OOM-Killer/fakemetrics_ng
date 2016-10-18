@@ -4,9 +4,6 @@ import (
 	"flag"
 
 	"github.com/OOM-Killer/fakemetrics_ng/agents"
-	"github.com/OOM-Killer/fakemetrics_ng/data_gen"
-	"github.com/OOM-Killer/fakemetrics_ng/out"
-	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
 
 var (
@@ -17,10 +14,6 @@ var (
 
 func main() {
 	flag.Parse()
-	timer.RegisterFlagSets()
-	data_gen.RegisterFlagSets()
-	out.RegisterFlagSets()
-	agents.RegisterFlagSets()
 
 	setupConfig()
 
