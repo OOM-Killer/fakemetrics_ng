@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	confFile = flag.String("config",
-		"fakemetrics.ini",
-		"configuration file path")
+	confFile = flag.String(
+		"config", "fakemetrics.ini", "configuration file path",
+	)
 )
 
 func main() {

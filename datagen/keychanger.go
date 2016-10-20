@@ -1,4 +1,4 @@
-package key_changer
+package datagen
 
 import (
 	"flag"
@@ -6,35 +6,34 @@ import (
 
 	"gopkg.in/raintank/schema.v1"
 
-	mod "github.com/OOM-Killer/fakemetrics_ng/data_gen/module"
 	gc "github.com/rakyll/globalconf"
 )
 
 var (
 	pointsPerKey int
-	keyCount     int
-	keyPrefix    string
 	syncSwitch   bool
+	kcKeyCount  int
+	kcKeyPrefix string
 )
 
-var Module *mod.ModuleT = &mod.ModuleT{
-	"key-changer",
-	func(id int) mod.DataGen { return New(id) },
-	RegisterFlagSet,
-}
-
-type KeyChanger struct {
+type Keychanger struct {
 	agentId   int
 	keyPoints []int
 	currKey   []int
 }
 
-func New(id int) *KeyChanger {
-	initValue := 0
-	keyPoints := make([]int, keyCount)
-	currKey := make([]int, keyCount)
+func init() {
+	modules["keychanger"] = NewKeychanger
+	regFlags = append(regFlags, RegFlagsKeychanger)
 
-	for i := 0; i < keyCount; i++ {
+}
+
+func NewKeychanger(agentid int) (Datagen) {
+	initValue := 0
+	keyPoints := make([]int, kcKeyCount)
+	currKey := make([]int, kcKeyCount)
+
+	for i := 0; i < kcKeyCount; i++ {
 		currKey[i] = 0
 		keyPoints[i] = initValue
 		if !syncSwitch {
@@ -42,23 +41,23 @@ func New(id int) *KeyChanger {
 		}
 	}
 
-	return &KeyChanger{id, keyPoints, currKey}
+	return &Keychanger{agentid, keyPoints, currKey}
 }
 
-func RegisterFlagSet() {
+func RegFlagsKeychanger() {
 	flags := flag.NewFlagSet("key-changer", flag.ExitOnError)
 	flags.IntVar(&pointsPerKey, "points-per-key", 10, "number of points per key")
-	flags.IntVar(&keyCount, "key-count", 100, "number of keys to generate")
-	flags.StringVar(&keyPrefix, "key-prefix", "some.key", "prefix for keys")
+	flags.IntVar(&kcKeyCount, "key-count", 100, "number of keys to generate")
+	flags.StringVar(&kcKeyPrefix, "key-prefix", "some.key", "prefix for keys")
 	flags.BoolVar(&syncSwitch, "sync-switch", true, "change all keys at once")
 	gc.Register("key-changer", flags)
 }
 
-func (kc *KeyChanger) GetData(ts int64) []*schema.MetricData {
-	metrics := make([]*schema.MetricData, keyCount)
+func (kc *Keychanger) GetData(ts int64) []*schema.MetricData {
+	metrics := make([]*schema.MetricData, kcKeyCount)
 
-	for i := 0; i < keyCount; i++ {
-		name := fmt.Sprintf(keyPrefix+"%d.%d.%d", kc.agentId, i, kc.currKey[i])
+	for i := 0; i < kcKeyCount; i++ {
+		name := fmt.Sprintf(kcKeyPrefix+"%d.%d.%d", kc.agentId, i, kc.currKey[i])
 		metrics[i] = &schema.MetricData{
 			Name:   name,
 			Metric: name,

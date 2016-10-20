@@ -7,7 +7,7 @@ import (
 	gc "github.com/rakyll/globalconf"
 
 	"github.com/OOM-Killer/fakemetrics_ng/agents"
-	"github.com/OOM-Killer/fakemetrics_ng/data_gen"
+	"github.com/OOM-Killer/fakemetrics_ng/datagen"
 	"github.com/OOM-Killer/fakemetrics_ng/out"
 	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
@@ -31,7 +31,7 @@ var (
 
 func setupConfig() {
 	timer.RegisterFlagSets()
-	data_gen.RegisterFlagSets()
+	datagen.RegFlags()
 	out.RegisterFlagSets()
 	agents.RegisterFlagSets()
 

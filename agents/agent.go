@@ -3,14 +3,14 @@ package agents
 import (
 	"time"
 
-	data_gen "github.com/OOM-Killer/fakemetrics_ng/data_gen/module"
+	"github.com/OOM-Killer/fakemetrics_ng/datagen"
 	out "github.com/OOM-Killer/fakemetrics_ng/out/module"
 	timer "github.com/OOM-Killer/fakemetrics_ng/timer/module"
 )
 
 type Agent struct {
 	timer   timer.Timer
-	dataGen data_gen.DataGen
+	datagen datagen.Datagen
 	out     out.OutIface
 	offset  int
 }
@@ -26,7 +26,7 @@ func (a *Agent) Run() {
 }
 
 func (a *Agent) doTick() {
-	metrics := a.dataGen.GetData(a.timer.GetTimestamp())
+	metrics := a.datagen.GetData(a.timer.GetTimestamp())
 	for _, m := range metrics {
 		a.out.Put(m)
 	}

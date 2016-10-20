@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/OOM-Killer/fakemetrics_ng/data_gen"
+	"github.com/OOM-Killer/fakemetrics_ng/datagen"
 	"github.com/OOM-Killer/fakemetrics_ng/out"
 	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
@@ -39,7 +39,7 @@ func (a *Agents) Run() {
 
 		a.agents[i] = &Agent{
 			timer,
-			data_gen.GetInstance(a.dataGen, i),
+			datagen.Get(a.dataGen, i),
 			out.GetMultiInstance(a.out),
 			os,
 		}
