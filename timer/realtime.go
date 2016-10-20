@@ -7,7 +7,6 @@ import (
 	gc "github.com/rakyll/globalconf"
 )
 
-
 type Realtime struct {
 	id int
 }
@@ -21,7 +20,7 @@ func init() {
 	regFlags = append(regFlags, rtRegFlags)
 }
 
-func rtNew(id int) (Timer) {
+func rtNew(id int) Timer {
 	return &Realtime{id}
 }
 

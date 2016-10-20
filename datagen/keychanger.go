@@ -10,7 +10,7 @@ import (
 )
 
 type Keychanger struct {
-	id   int
+	id        int
 	keyPoints []int
 	currKey   []int
 }
@@ -18,8 +18,8 @@ type Keychanger struct {
 var (
 	pointsPerKey int
 	syncSwitch   bool
-	kcKeyCount  int
-	kcKeyPrefix string
+	kcKeyCount   int
+	kcKeyPrefix  string
 )
 
 func init() {
@@ -28,7 +28,7 @@ func init() {
 
 }
 
-func kcNew(id int) (Datagen) {
+func kcNew(id int) Datagen {
 	initValue := 0
 	keyPoints := make([]int, kcKeyCount)
 	currKey := make([]int, kcKeyCount)

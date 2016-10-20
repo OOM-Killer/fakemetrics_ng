@@ -10,7 +10,7 @@ type Timer interface {
 	GetTicker() <-chan time.Time
 	GetTimestamp() int64
 }
-type tConstructor func(int)(Timer)
+type tConstructor func(int) Timer
 
 var modules map[string]tConstructor = make(map[string]tConstructor)
 var regFlags []func()

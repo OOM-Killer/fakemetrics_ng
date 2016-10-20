@@ -34,7 +34,7 @@ func init() {
 	regFlags = append(regFlags, cRegFlags)
 }
 
-func cNew(id int) (Out) {
+func cNew(id int) Out {
 	c := &Carbon{}
 	c.Id = id
 	return c

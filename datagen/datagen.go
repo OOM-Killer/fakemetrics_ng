@@ -9,7 +9,7 @@ import (
 type Datagen interface {
 	GetData(int64) []*schema.MetricData
 }
-type dgConstructor func(int)(Datagen)
+type dgConstructor func(int) Datagen
 
 var modules map[string]dgConstructor = make(map[string]dgConstructor)
 var regFlags []func()

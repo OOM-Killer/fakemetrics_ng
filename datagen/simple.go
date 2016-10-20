@@ -23,7 +23,7 @@ func init() {
 	regFlags = append(regFlags, sRegFlags)
 }
 
-func sNew(id int) (Datagen) {
+func sNew(id int) Datagen {
 	return &Simple{id}
 }
 

@@ -40,7 +40,7 @@ func setupConfig() {
 			Filename: *confFile,
 		})
 	if err != nil {
-    panic(err)
+		panic(err)
 	}
 
 	moduleFlags := flag.NewFlagSet("modules", flag.ExitOnError)

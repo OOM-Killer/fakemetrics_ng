@@ -10,7 +10,7 @@ import (
 )
 
 type Backfill struct {
-	id      int
+	id           int
 	internalTime int64
 	ticker       chan time.Time
 }
@@ -18,7 +18,7 @@ type Backfill struct {
 type LongDurationFlag uint32
 
 var (
-	bfInterval    int
+	bfInterval  int
 	startOffset LongDurationFlag
 )
 
@@ -27,7 +27,7 @@ func init() {
 	regFlags = append(regFlags, bfRegFlags)
 }
 
-func bfNew(id int) (Timer) {
+func bfNew(id int) Timer {
 	return &Backfill{id, 0, make(chan time.Time)}
 }
 

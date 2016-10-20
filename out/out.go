@@ -9,7 +9,7 @@ type Out interface {
 	Start()
 	Put(*schema.MetricData)
 }
-type oConstructor func(int)(Out)
+type oConstructor func(int) Out
 
 var modules map[string]oConstructor = make(map[string]oConstructor)
 var regFlags []func()

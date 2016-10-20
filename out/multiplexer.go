@@ -15,7 +15,7 @@ func init() {
 	modules["multiplexer"] = mpNew
 }
 
-func mpNew(id int) (Out) {
+func mpNew(id int) Out {
 	m := &Multiplexer{}
 	m.Id = id
 	return m
