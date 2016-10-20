@@ -25,7 +25,7 @@ func (a *Agents) Run() {
 	var os int
 
 	for i := 0; i < agentCount; i++ {
-		timer := timer.GetInstance(a.time, i)
+		timer := timer.Get(a.time, i)
 		switch offsets {
 		case "none":
 			os = 0

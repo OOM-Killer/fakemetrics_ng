@@ -5,7 +5,7 @@ import (
 
 	"github.com/OOM-Killer/fakemetrics_ng/datagen"
 	out "github.com/OOM-Killer/fakemetrics_ng/out/module"
-	timer "github.com/OOM-Killer/fakemetrics_ng/timer/module"
+	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
 
 type Agent struct {

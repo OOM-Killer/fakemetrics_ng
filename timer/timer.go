@@ -2,30 +2,29 @@ package timer
 
 import (
 	"fmt"
-
-	bf "github.com/OOM-Killer/fakemetrics_ng/timer/backfill"
-	mod "github.com/OOM-Killer/fakemetrics_ng/timer/module"
-	rt "github.com/OOM-Killer/fakemetrics_ng/timer/realtime"
+	"time"
 )
 
-var (
-	moduleMap []*mod.ModuleT = []*mod.ModuleT{
-		rt.Module,
-		bf.Module,
-	}
-)
+type Timer interface {
+	GetInterval() int
+	GetTicker() <-chan time.Time
+	GetTimestamp() int64
+}
+type tConstructor func(int)(Timer)
 
-func RegisterFlagSets() {
-	for _, t := range moduleMap {
-		t.RegFlags()
+var modules map[string]tConstructor = make(map[string]tConstructor)
+var regFlags []func()
+
+func RegFlags() {
+	for _, reg := range regFlags {
+		reg()
 	}
 }
 
-func GetInstance(seek string, agentId int) mod.Timer {
-	for _, t := range moduleMap {
-		if t.Name == seek {
-			return t.Init(agentId)
-		}
+func Get(name string, id int) Timer {
+	mod, ok := modules[name]
+	if !ok {
+		panic(fmt.Sprintf("failed to find timer %s", name))
 	}
-	panic(fmt.Sprintf("failed to find timer %s", seek))
+	return mod(id)
 }

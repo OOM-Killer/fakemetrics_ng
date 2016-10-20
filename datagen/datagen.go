@@ -20,11 +20,10 @@ func RegFlags() {
 	}
 }
 
-func Get(name string, agentid int) Datagen {
+func Get(name string, id int) Datagen {
 	mod, ok := modules[name]
 	if !ok {
 		panic(fmt.Sprintf("could not find datagen %q", name))
 	}
-	inst := mod(agentid)
-	return inst
+	return mod(id)
 }

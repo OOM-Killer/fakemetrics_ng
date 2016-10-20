@@ -9,25 +9,25 @@ import (
 	gc "github.com/rakyll/globalconf"
 )
 
+type Simple struct {
+	id int
+}
+
 var (
 	sKeyCount  int
 	sKeyPrefix string
 )
 
-type Simple struct {
-	agentid int
-}
-
 func init() {
-	modules["simple"] = NewSimple
-	regFlags = append(regFlags, RegFlagsSimple)
+	modules["simple"] = sNew
+	regFlags = append(regFlags, sRegFlags)
 }
 
-func NewSimple(agentid int) (Datagen) {
-	return &Simple{agentid}
+func sNew(id int) (Datagen) {
+	return &Simple{id}
 }
 
-func RegFlagsSimple() {
+func sRegFlags() {
 	flags := flag.NewFlagSet("simple", flag.ExitOnError)
 	flags.IntVar(&sKeyCount, "key-count", 100, "number of keys to generate")
 	flags.StringVar(&sKeyPrefix, "key-prefix", "some.key.", "prefix for keys")
@@ -39,8 +39,8 @@ func (s *Simple) GetData(ts int64) []*schema.MetricData {
 
 	for i := 0; i < sKeyCount; i++ {
 		metrics[i] = &schema.MetricData{
-			Name:   fmt.Sprintf(sKeyPrefix+"%d.%d", s.agentid, i),
-			Metric: fmt.Sprintf(sKeyPrefix+"%d.%d", s.agentid, i),
+			Name:   fmt.Sprintf(sKeyPrefix+"%d.%d", s.id, i),
+			Metric: fmt.Sprintf(sKeyPrefix+"%d.%d", s.id, i),
 			OrgId:  i,
 			Value:  0,
 			Unit:   "ms",

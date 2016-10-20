@@ -30,7 +30,7 @@ var (
 )
 
 func setupConfig() {
-	timer.RegisterFlagSets()
+	timer.RegFlags()
 	datagen.RegFlags()
 	out.RegisterFlagSets()
 	agents.RegisterFlagSets()

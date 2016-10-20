@@ -9,6 +9,12 @@ import (
 	gc "github.com/rakyll/globalconf"
 )
 
+type Keychanger struct {
+	id   int
+	keyPoints []int
+	currKey   []int
+}
+
 var (
 	pointsPerKey int
 	syncSwitch   bool
@@ -16,19 +22,13 @@ var (
 	kcKeyPrefix string
 )
 
-type Keychanger struct {
-	agentId   int
-	keyPoints []int
-	currKey   []int
-}
-
 func init() {
-	modules["keychanger"] = NewKeychanger
-	regFlags = append(regFlags, RegFlagsKeychanger)
+	modules["keychanger"] = kcNew
+	regFlags = append(regFlags, kcRegFlags)
 
 }
 
-func NewKeychanger(agentid int) (Datagen) {
+func kcNew(id int) (Datagen) {
 	initValue := 0
 	keyPoints := make([]int, kcKeyCount)
 	currKey := make([]int, kcKeyCount)
@@ -41,10 +41,10 @@ func NewKeychanger(agentid int) (Datagen) {
 		}
 	}
 
-	return &Keychanger{agentid, keyPoints, currKey}
+	return &Keychanger{id, keyPoints, currKey}
 }
 
-func RegFlagsKeychanger() {
+func kcRegFlags() {
 	flags := flag.NewFlagSet("key-changer", flag.ExitOnError)
 	flags.IntVar(&pointsPerKey, "points-per-key", 10, "number of points per key")
 	flags.IntVar(&kcKeyCount, "key-count", 100, "number of keys to generate")
@@ -57,7 +57,7 @@ func (kc *Keychanger) GetData(ts int64) []*schema.MetricData {
 	metrics := make([]*schema.MetricData, kcKeyCount)
 
 	for i := 0; i < kcKeyCount; i++ {
-		name := fmt.Sprintf(kcKeyPrefix+"%d.%d.%d", kc.agentId, i, kc.currKey[i])
+		name := fmt.Sprintf(kcKeyPrefix+"%d.%d.%d", kc.id, i, kc.currKey[i])
 		metrics[i] = &schema.MetricData{
 			Name:   name,
 			Metric: name,
