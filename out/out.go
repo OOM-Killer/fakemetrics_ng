@@ -2,37 +2,36 @@ package out
 
 import (
 	"fmt"
-
-	carbon "github.com/OOM-Killer/fakemetrics_ng/out/carbon"
-	mod "github.com/OOM-Killer/fakemetrics_ng/out/module"
-	mp "github.com/OOM-Killer/fakemetrics_ng/out/multiplexer"
+	"gopkg.in/raintank/schema.v1"
 )
 
-var (
-	moduleMap []*mod.ModuleT = []*mod.ModuleT{
-		carbon.Module,
-	}
-)
+type Out interface {
+	Start()
+	Put(*schema.MetricData)
+}
+type oConstructor func(int)(Out)
 
-func RegisterFlagSets() {
-	for _, o := range moduleMap {
-		o.RegFlags()
+var modules map[string]oConstructor = make(map[string]oConstructor)
+var regFlags []func()
+
+func RegFlags() {
+	for _, reg := range regFlags {
+		reg()
 	}
 }
 
-func GetInstance(seek string) mod.OutIface {
-	for _, o := range moduleMap {
-		if o.Name == seek {
-			return o.Init()
-		}
+func Get(name string, id int) Out {
+	mod, ok := modules[name]
+	if !ok {
+		panic(fmt.Sprintf("failed to find output %s", name))
 	}
-	panic(fmt.Sprintf("failed to find output %s", seek))
+	return mod(id)
 }
 
-func GetMultiInstance(names []string) mod.OutIface {
-	m := mp.Multiplexer{}
+func GetMulti(names []string, id int) Out {
+	m := Multiplexer{}
 	for _, name := range names {
-		m.AddOut(GetInstance(name))
+		m.AddOut(Get(name, id))
 	}
 	return &m
 }

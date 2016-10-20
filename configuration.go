@@ -32,7 +32,7 @@ var (
 func setupConfig() {
 	timer.RegFlags()
 	datagen.RegFlags()
-	out.RegisterFlagSets()
+	out.RegFlags()
 	agents.RegisterFlagSets()
 
 	conf, err := gc.NewWithOptions(

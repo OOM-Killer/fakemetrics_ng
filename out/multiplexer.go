@@ -1,15 +1,24 @@
-package multiplexer
+package out
 
 import (
 	"gopkg.in/raintank/schema.v1"
-
-	mod "github.com/OOM-Killer/fakemetrics_ng/out/module"
 )
 
 type Multiplexer struct {
+	Id       int
 	in       chan *schema.MetricData
-	outs     []mod.OutIface
+	outs     []Out
 	outChans []chan *schema.MetricData
+}
+
+func init() {
+	modules["multiplexer"] = mpNew
+}
+
+func mpNew(id int) (Out) {
+	m := &Multiplexer{}
+	m.Id = id
+	return m
 }
 
 func (m *Multiplexer) Start() {
@@ -24,8 +33,6 @@ func (m *Multiplexer) Put(metric *schema.MetricData) {
 	}
 }
 
-func (m *Multiplexer) AddOut(out mod.OutIface) {
+func (m *Multiplexer) AddOut(out Out) {
 	m.outs = append(m.outs, out)
 }
-
-func (m *Multiplexer) RegisterFlagSet() {}

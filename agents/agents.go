@@ -40,7 +40,7 @@ func (a *Agents) Run() {
 		a.agents[i] = &Agent{
 			timer,
 			datagen.Get(a.dataGen, i),
-			out.GetMultiInstance(a.out),
+			out.GetMulti(a.out, i),
 			os,
 		}
 	}

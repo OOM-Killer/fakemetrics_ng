@@ -1,4 +1,4 @@
-package buffered_writer
+package out
 
 import (
 	"gopkg.in/raintank/schema.v1"

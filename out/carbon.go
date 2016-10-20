@@ -1,4 +1,4 @@
-package carbon
+package out
 
 import (
 	"bytes"
@@ -10,40 +10,44 @@ import (
 
 	"gopkg.in/raintank/schema.v1"
 
-	bw "github.com/OOM-Killer/fakemetrics_ng/out/buffered_writer"
-	mod "github.com/OOM-Killer/fakemetrics_ng/out/module"
 	gc "github.com/rakyll/globalconf"
 )
 
 var (
-	flushInterval   int
-	metricsPerFlush int
-	writeBufferSize int
-	blockOnWrite    bool
-	host            string
-	port            int
+	cFlushInterval   int
+	cMetricsPerFlush int
+	cWriteBufferSize int
+	cBlockOnWrite    bool
+	cHost            string
+	cPort            int
 )
 
-var Module *mod.ModuleT = &mod.ModuleT{
-	"carbon",
-	func() mod.OutIface { return &Carbon{} },
-	RegisterFlagSet,
-}
-
 type Carbon struct {
+	Id   int
 	in   chan *schema.MetricData
-	bw   *bw.BufferedWriter
+	bw   *BufferedWriter
 	conn net.Conn
 }
 
-func RegisterFlagSet() {
+func init() {
+	modules["carbon"] = cNew
+	regFlags = append(regFlags, cRegFlags)
+}
+
+func cNew(id int) (Out) {
+	c := &Carbon{}
+	c.Id = id
+	return c
+}
+
+func cRegFlags() {
 	flags := flag.NewFlagSet("carbon", flag.ExitOnError)
-	flags.IntVar(&flushInterval, "flush-interval", 100, "the metric interval")
-	flags.IntVar(&metricsPerFlush, "metrics-per-flush", 10, "the metric interval")
-	flags.IntVar(&writeBufferSize, "write-buffer-size", 1000, "write buffer size")
-	flags.StringVar(&host, "host", "localhost", "carbon host name")
-	flags.IntVar(&port, "port", 2003, "carbon port")
-	flags.BoolVar(&blockOnWrite, "block-on-write", false, "block on slow write")
+	flags.IntVar(&cFlushInterval, "flush-interval", 100, "the metric interval")
+	flags.IntVar(&cMetricsPerFlush, "metrics-per-flush", 10, "the metric interval")
+	flags.IntVar(&cWriteBufferSize, "write-buffer-size", 1000, "write buffer size")
+	flags.StringVar(&cHost, "host", "localhost", "carbon host name")
+	flags.IntVar(&cPort, "port", 2003, "carbon port")
+	flags.BoolVar(&cBlockOnWrite, "block-on-write", false, "block on slow write")
 	gc.Register("carbon", flags)
 }
 
@@ -52,7 +56,7 @@ func (c *Carbon) Put(metric *schema.MetricData) {
 		panic("can't accept data before starting")
 	}
 
-	if blockOnWrite {
+	if cBlockOnWrite {
 		c.in <- metric
 	} else {
 		select {
@@ -64,10 +68,10 @@ func (c *Carbon) Put(metric *schema.MetricData) {
 }
 
 func (c *Carbon) Start() {
-	c.bw = &bw.BufferedWriter{}
-	c.bw.FlushInterval = flushInterval
-	c.bw.MetricsPerFlush = metricsPerFlush
-	c.bw.WriteBufferSize = writeBufferSize
+	c.bw = &BufferedWriter{}
+	c.bw.FlushInterval = cFlushInterval
+	c.bw.MetricsPerFlush = cMetricsPerFlush
+	c.bw.WriteBufferSize = cWriteBufferSize
 	c.bw.FlushCB = c.flush
 	c.in = c.bw.GetChan()
 	c.connect()
@@ -76,7 +80,7 @@ func (c *Carbon) Start() {
 
 func (c *Carbon) connect() {
 	for {
-		conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
+		conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", cHost, cPort))
 		if err == nil {
 			c.conn = conn
 			break
