@@ -4,14 +4,14 @@ import (
 	"time"
 
 	"github.com/OOM-Killer/fakemetrics_ng/datagen"
-	out "github.com/OOM-Killer/fakemetrics_ng/out/module"
+	"github.com/OOM-Killer/fakemetrics_ng/out"
 	"github.com/OOM-Killer/fakemetrics_ng/timer"
 )
 
 type Agent struct {
 	timer   timer.Timer
 	datagen datagen.Datagen
-	out     out.OutIface
+	out     out.Out
 	offset  int
 }
 

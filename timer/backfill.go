@@ -27,7 +27,7 @@ func init() {
 	regFlags = append(regFlags, bfRegFlags)
 }
 
-func bfNew(id int) Timer {
+func bfNew(id int, agents int) Timer {
 	return &Backfill{id, 0, make(chan time.Time)}
 }
 

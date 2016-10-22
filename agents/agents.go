@@ -23,9 +23,10 @@ func New(t string, dg string, o []string) *Agents {
 
 func (a *Agents) Run() {
 	var os int
+	rand.Seed(time.Now().Unix())
 
 	for i := 0; i < agentCount; i++ {
-		timer := timer.Get(a.time, i)
+		timer := timer.Get(a.time, i, agentCount)
 		switch offsets {
 		case "none":
 			os = 0

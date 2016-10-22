@@ -20,7 +20,7 @@ func init() {
 	regFlags = append(regFlags, rtRegFlags)
 }
 
-func rtNew(id int) Timer {
+func rtNew(id int, agents int) Timer {
 	return &Realtime{id}
 }
 
