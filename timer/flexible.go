@@ -1,10 +1,10 @@
 package timer
 
 import (
-	"fmt"
 	"flag"
-	"time"
+	"fmt"
 	"math/rand"
+	"time"
 
 	gc "github.com/rakyll/globalconf"
 )
@@ -16,9 +16,9 @@ type Flexible struct {
 }
 
 var (
-	fMaxInterval        int
-	fMinInterval        int
-	randDist bool
+	fMaxInterval int
+	fMinInterval int
+	randDist     bool
 )
 
 func init() {
@@ -31,7 +31,7 @@ func fNew(id int, agents int) Timer {
 	var interval int
 	if randDist {
 		// a random number between min and max
-		interval = rand.Intn(fMaxInterval - fMinInterval) + fMinInterval
+		interval = rand.Intn(fMaxInterval-fMinInterval) + fMinInterval
 	} else {
 		// intervals are evenly distributed between min and max
 		interval = ((fMaxInterval - fMinInterval) / agents * id) + fMinInterval
